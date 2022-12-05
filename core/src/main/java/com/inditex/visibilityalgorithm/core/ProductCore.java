@@ -6,4 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductCore {
     Page<Product> findAll(Pageable pageable);
+
+    Product create(Product product);
 }
