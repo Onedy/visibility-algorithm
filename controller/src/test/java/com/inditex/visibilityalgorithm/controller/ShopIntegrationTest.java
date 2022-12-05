@@ -20,6 +20,7 @@ import static com.inditex.visibilityalgorithm.controller.ResourcesUtils.readReso
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -117,6 +118,24 @@ class ShopIntegrationTest {
         var returnedProduct = objectMapper.readValue(result.getResponse().getContentAsString(), com.inditex.visibilityalgorithm.dto.out.Product.class);
 
         assertProductWithAllSizesIsSaved(returnedProduct, 1);
+    }
+
+    @Test
+    void shouldReturnNotFound_whenProductDoesntExist() throws Exception {
+        mockMvc.perform(get("/shop/product/848348648912")
+                .header("version", 1))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequest_whenBodyIsNotValid() throws Exception {
+        mockMvc.perform(post("/shop/product")
+                .header("version", 1)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(readResource("integration-tests/product-with-not-valid-fields.json")))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().json("[\"sequence must be greater than or equal to 0\"," +
+                "\"sizes[0].quantity must be greater than or equal to 0\"]"));
     }
 
     private void assertProductWithAllSizesIsSaved(com.inditex.visibilityalgorithm.dto.out.Product returnedProduct, int expectedSizesLength) {

@@ -3,6 +3,7 @@ package com.inditex.visibilityalgorithm.core.impl;
 import com.inditex.visibilityalgorithm.core.AbstractProductCore;
 import com.inditex.visibilityalgorithm.core.Implementation;
 import com.inditex.visibilityalgorithm.core.entity.Size;
+import com.inditex.visibilityalgorithm.core.exception.ProductNotFoundException;
 import com.inditex.visibilityalgorithm.core.mappers.ProductMapper;
 import com.inditex.visibilityalgorithm.core.repository.ProductRepository;
 import com.inditex.visibilityalgorithm.core.repository.SizeRepository;
@@ -35,6 +36,12 @@ public class ProductCoreImpl extends AbstractProductCore {
         ensureSizesAreInDB(productEntity);
         var savedProduct = productRepository.save(productEntity);
         return productMapper.toDto(savedProduct);
+    }
+
+    @Override
+    public Product findOne(Long id) {
+        var product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        return productMapper.toDto(product);
     }
 
     private void ensureSizesAreInDB(com.inditex.visibilityalgorithm.core.entity.Product productEntity) {

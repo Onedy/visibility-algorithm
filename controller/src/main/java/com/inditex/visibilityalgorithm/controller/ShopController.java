@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -32,5 +33,10 @@ public class ShopController {
     @PostMapping("/product")
     public ResponseEntity<Product> createProduct(@RequestHeader Integer version, @Valid @RequestBody Product product) {
         return new ResponseEntity<>(productFacade.get(version).create(product), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<Product> findProduct(@RequestHeader Integer version, @PathVariable Long id) {
+        return ResponseEntity.ok(productFacade.get(version).findOne(id));
     }
 }

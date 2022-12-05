@@ -5,8 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -18,7 +18,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return this.handleExceptionInternal(e, e.getFieldErrors().stream()
-                .map(FieldError::getDefaultMessage)
+                .map(fieldError -> fieldError.getField() + " " + fieldError.getDefaultMessage())
                 .collect(Collectors.toList()),
             headers, status, request);
     }
@@ -29,5 +29,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .description("Request not readable.")
                 .build(),
             headers, status, request);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ServiceError> handleProductNotFoundException(ProductNotFoundException e) {
+        return new ResponseEntity<>(ServiceError.builder()
+            .description("Product not found")
+            .build(), HttpStatus.NOT_FOUND);
     }
 }

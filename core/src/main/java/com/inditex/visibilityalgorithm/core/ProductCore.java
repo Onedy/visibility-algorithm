@@ -8,4 +8,6 @@ public interface ProductCore {
     Page<Product> findAll(Pageable pageable);
 
     Product create(Product product);
+
+    Product findOne(Long id);
 }
