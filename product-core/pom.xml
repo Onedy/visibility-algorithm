@@ -11,6 +11,7 @@
     <properties>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
     </properties>
+    <artifactId>product-core</artifactId>
     <build>
         <plugins>
             <plugin>
@@ -25,6 +26,11 @@
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
+<!--                        <path>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok-mapstruct-binding</artifactId>-->
+<!--                            <version>0.2.0</version>-->
+<!--                        </path>-->
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
@@ -34,6 +40,9 @@
                     <compilerArgs>
                         <arg>
                             -Amapstruct.defaultComponentModel=spring
+                        </arg>
+                        <arg>
+                            -Amapstruct.verbose=true
                         </arg>
                     </compilerArgs>
                 </configuration>
@@ -55,6 +64,7 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -62,6 +72,5 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-    <artifactId>shop-core</artifactId>
 
 </project>
