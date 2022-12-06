@@ -1,4 +1,4 @@
-package com.inditex.visibilityalgorithm.core.impl;
+package com.inditex.visibilityalgorithm.core.service;
 
 import com.inditex.visibilityalgorithm.core.AbstractProductCore;
 import com.inditex.visibilityalgorithm.core.Implementation;

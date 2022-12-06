@@ -1,4 +1,4 @@
-package com.inditex.visibilityalgorithm.core.impl;
+package com.inditex.visibilityalgorithm.core.service;
 
 import com.inditex.visibilityalgorithm.core.entity.Product;
 import com.inditex.visibilityalgorithm.core.mappers.ProductMapper;
@@ -61,5 +61,4 @@ class ProductCoreImplTest {
         assertThat(productCoreImpl.findAll(pageable))
             .hasSize(2);
     }
-
 }
