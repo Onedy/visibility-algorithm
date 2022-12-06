@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inditex.visibilityalgorithm.core.entity.Product;
 import com.inditex.visibilityalgorithm.core.entity.Size;
 import com.inditex.visibilityalgorithm.core.repository.ProductRepository;
-import com.inditex.visibilityalgorithm.core.repository.SizeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +33,15 @@ class ShopIntegrationTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private SizeRepository sizeRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void init() {
         productRepository.deleteAll();
-        sizeRepository.deleteAll();
     }
 
     @Test
-    void shouldRetrieveProducts_whenGetToProductsEndpoint() throws Exception {
-        initDb();
-
+    void shouldRetrieveProductsCreatedByFlyway_whenGetToProductsEndpoint() throws Exception {
         mockMvc.perform(get("/shop/product")
                 .header("version", 1))
             .andExpect(status().isOk());
@@ -56,14 +49,13 @@ class ShopIntegrationTest {
 
     @Test
     void shouldCreateProduct_whenSizeExists() throws Exception {
-        Size savedSize = sizeRepository.save(Size.builder()
-            .quantity(5)
-            .backSoon(true)
-            .special(false)
-            .build());
         Product productToSave = Product.builder()
             .sequence(5)
-            .sizes(List.of(savedSize))
+            .sizes(List.of(Size.builder()
+                .quantity(5)
+                .backSoon(true)
+                .special(false)
+                .build()))
             .build();
 
         MvcResult result = mockMvc.perform(post("/shop/product")
@@ -80,14 +72,13 @@ class ShopIntegrationTest {
 
     @Test
     void shouldCreateProduct_whenOnlySomeSizesExist() throws Exception {
-        Size savedSize = sizeRepository.save(Size.builder()
-            .quantity(5)
-            .backSoon(true)
-            .special(false)
-            .build());
         Product productToSave = Product.builder()
             .sequence(5)
-            .sizes(List.of(savedSize, Size.builder()
+            .sizes(List.of(Size.builder()
+                .quantity(5)
+                .backSoon(true)
+                .special(false)
+                .build(), Size.builder()
                 .quantity(2)
                 .backSoon(false)
                 .special(true)
@@ -144,30 +135,5 @@ class ShopIntegrationTest {
         assertThat(returnedProduct.sizes())
             .hasSize(expectedSizesLength)
             .extracting("id").isNotNull();
-    }
-
-    private void initDb() {
-        Size size1 = sizeRepository.save(Size.builder()
-            .id(1L)
-            .quantity(5)
-            .backSoon(true)
-            .special(false)
-            .build());
-        Size size2 = sizeRepository.save(Size.builder()
-            .id(2L)
-            .quantity(3)
-            .backSoon(false)
-            .special(true)
-            .build());
-        productRepository.saveAll(List.of(Product.builder()
-                .id(1L)
-                .sequence(2)
-                .sizes(List.of(size1))
-                .build(),
-            Product.builder()
-                .id(2L)
-                .sequence(4)
-                .sizes(List.of(size2))
-                .build()));
     }
 }

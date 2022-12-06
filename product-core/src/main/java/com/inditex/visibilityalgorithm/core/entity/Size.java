@@ -20,7 +20,7 @@ import javax.persistence.Id;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class Size {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean backSoon;
     private Boolean special;

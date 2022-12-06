@@ -1,0 +1,15 @@
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:/flyway
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    baseline-on-migrate: true
+    create-schemas: true
+  jpa:
+    hibernate.ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+database_schema: shop
